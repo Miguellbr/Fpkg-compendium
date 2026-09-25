@@ -44,12 +44,53 @@ function typeOf(file,name){
   return "Base";
 }
 
+function detectSchema(data){
+  if(!data || typeof data!=="object" || Array.isArray(data))
+    return {ok:false,error:"O arquivo precisa conter um objeto JSON na raiz."};
+
+  if(!data.DATA || typeof data.DATA!=="object" || Array.isArray(data.DATA))
+    return {ok:false,error:'Campo "DATA" não encontrado ou não é um objeto.'};
+
+  const entries=Object.entries(data.DATA);
+  if(!entries.length)
+    return {ok:false,error:'O campo "DATA" está vazio.'};
+
+  const sample=entries[0][1];
+  if(!sample || typeof sample!=="object" || Array.isArray(sample))
+    return {ok:false,error:'Cada item dentro de "DATA" precisa ser um objeto.'};
+
+  const required=["title_id","name"];
+  const missing=required.filter(k=>!(k in sample));
+  if(missing.length)
+    return {ok:false,error:`Campo(s) obrigatório(s) ausente(s): ${missing.join(", ")}.`};
+
+  if(typeof sample.title_id!=="string" || typeof sample.name!=="string")
+    return {ok:false,error:'"title_id" e "name" precisam ser textos (strings).'};
+
+  return {ok:true};
+}
+
+function exampleJSON(){
+  return `{
+  "DATA": {
+    "https://exemplo.com/arquivo.pkg": {
+      "title_id": "CUSA12345",
+      "name": "Final Fantasy Example",
+      "version": "01.00",
+      "region": "USA",
+      "size": 123456789,
+      "cover_url": "https://exemplo.com/capa.jpg"
+    }
+  }
+}`;
+}
+
 function addData(file,data){
-  const entries=data?.DATA;
-  if(!entries || typeof entries!=="object")return 0;
+  const check=detectSchema(data);
+  if(!check.ok) throw new Error(check.error);
   let n=0;
-  for(const [url,meta] of Object.entries(entries)){
-    if(!meta || !meta.title_id)continue;
+  for(const [url,meta] of Object.entries(data.DATA)){
+    if(!meta || typeof meta!=="object")continue;
     state.items.push({...meta,url,_type:typeOf(file,meta.name),_source:file});
     n++;
   }
@@ -155,10 +196,58 @@ $("#region").addEventListener("change",render);
 
 $("#files").addEventListener("change",async e=>{
   state.items=[];
+  const errors=[];
+  const okFiles=[];
   for(const f of e.target.files){
-    try{addData(f.name,JSON.parse(await f.text()))}
-    catch(err){console.warn("JSON inválido:",f.name,err)}
+    try{
+      const data=JSON.parse(await f.text());
+      const check=detectSchema(data);
+      if(!check.ok){
+        errors.push({file:f.name,message:check.error});
+        continue;
+      }
+      const count=addData(f.name,data);
+      okFiles.push(`${f.name} (${count} entradas)`);
+    }catch(err){
+      errors.push({file:f.name,message:"JSON inválido: não foi possível interpretar o conteúdo."});
+    }
   }
+
   rebuild();
-  $("#status").textContent=`${state.items.length} entradas carregadas • ${state.groups.size} jogos agrupados`;
-});
+
+  $("#fileNames").textContent=okFiles.length
+    ? okFiles.join(" • ")
+    : "Nenhum JSON compatível carregado";
+
+  const errorsBox=$("#errors");
+  errorsBox.innerHTML="";
+  if(errors.length){
+    const box=document.createElement("div");
+    box.id="errorBox";
+    const title=document.createElement("strong");
+    title.textContent="⚠️ Alguns arquivos não puderam ser carregados";
+    box.append(title);
+    for(const e of errors){
+      const p=document.createElement("div");
+      p.style.marginTop="8px";
+      p.textContent=`${e.file}: ${e.message}`;
+      box.append(p);
+    }
+    const p=document.createElement("p");
+    p.textContent="Exemplo de estrutura aceita:";
+    box.append(p);
+    const code=document.createElement("code");
+    code.textContent=exampleJSON();
+    box.append(code);
+    errorsBox.append(box);
+  }else if(okFiles.length){
+    const box=document.createElement("div");
+    box.className="successBox";
+    box.textContent=`✅ ${okFiles.length} JSON(s) carregado(s) • ${state.groups.size} jogo(s) agrupado(s).`;
+    errorsBox.append(box);
+  }
+
+  $("#status").textContent=
+    "Os arquivos compatíveis foram combinados no catálogo. Você pode adicionar JSONs de outros jogos usando o mesmo formato.";
+}); 
+
