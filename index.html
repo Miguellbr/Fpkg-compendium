@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Catálogo de Jogos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🎮 Catálogo de Jogos</h1>
+    <p>Base + Updates + DLCs agrupados por Title ID</p>
+    <input id="search" type="search" placeholder="Pesquisar jogo...">
+    <div class="controls">
+      <label>JSONs:
+        <input id="files" type="file" accept=".json" multiple>
+      </label>
+      <select id="region">
+        <option value="">Todas as regiões</option>
+        <option>USA</option><option>EUR</option><option>JAP</option>
+        <option>ASIA</option><option>CHN</option><option>KOR</option>
+      </select>
+    </div>
+    <small id="status">Selecione GAMES.json, DLC.json e UPDATES.json.</small>
+  </header>
+
+  <main id="results"></main>
+
+  <template id="gameTemplate">
+    <article class="game">
+      <img class="cover" alt="">
+      <section class="info">
+        <button class="gameHead" type="button">
+          <span>
+            <h2 class="title"></h2>
+            <div class="meta"></div>
+          </span>
+          <span class="arrow">⌄</span>
+        </button>
+        <div class="chips"></div>
+        <div class="contentsWrap">
+          <div class="contents"></div>
+        </div>
+      </section>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>

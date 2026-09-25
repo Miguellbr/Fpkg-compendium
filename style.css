@@ -1,0 +1,33 @@
+*{box-sizing:border-box}
+body{margin:0;background:#0e1117;color:#e8edf3;font:15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#111722;border-bottom:1px solid #273142;padding:20px}
+h1{margin:0 0 4px;font-size:25px} header p{margin:0 0 16px;color:#9da9b8}
+#search{width:min(900px,100%);padding:13px 15px;border:1px solid #344154;border-radius:10px;background:#0a0e14;color:#fff;font-size:16px;outline:0}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+select,label{background:#171e2a;border:1px solid #344154;border-radius:9px;padding:9px;color:#dce4ee}
+input[type=file]{max-width:260px}
+#status{display:block;color:#8e9bad;margin-top:9px}
+main{max-width:1050px;margin:22px auto;padding:0 14px;display:grid;gap:14px}
+.game{display:flex;gap:18px;background:#151b25;border:1px solid #293447;border-radius:14px;padding:14px}
+.cover{width:105px;height:140px;object-fit:cover;border-radius:9px;background:#0b0e13}
+.info{min-width:0;flex:1}.title{margin:2px 0 6px;font-size:21px}
+.meta{color:#9eabbc;margin-bottom:10px}.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:#222b3a;border-radius:999px;padding:4px 9px;font-size:12px}
+details{margin-top:13px}summary{cursor:pointer;color:#b9d5ff}
+.row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #27303e}
+.row:last-child{border-bottom:0}.row small{color:#8f9bad}
+@media(max-width:600px){.game{gap:12px}.cover{width:78px;height:104px}.title{font-size:18px}}
+
+.game{transition:border-color .15s,transform .15s}
+.game:hover{border-color:#40516a}
+.gameHead{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;background:none;border:0;color:inherit;padding:0;cursor:pointer}
+.gameHead .arrow{font-size:25px;color:#91a0b3;transition:transform .15s}
+.game.open .gameHead .arrow{transform:rotate(180deg)}
+.contentsWrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .18s ease}
+.game.open .contentsWrap{grid-template-rows:1fr}
+.contents{min-height:0;overflow:hidden}
+.contentsWrap .contents{padding-top:0}
+.game.open .contentsWrap .contents{padding-top:10px}
+.sectionTitle{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#8290a3;margin:12px 0 4px}
+.itemLink{color:#dce9ff;text-decoration:none}
+.itemLink:hover{text-decoration:underline}
