@@ -31,3 +31,12 @@ details{margin-top:13px}summary{cursor:pointer;color:#b9d5ff}
 .sectionTitle{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#8290a3;margin:12px 0 4px}
 .itemLink{color:#dce9ff;text-decoration:none}
 .itemLink:hover{text-decoration:underline}
+
+.uploadBox{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.uploadLabel{display:inline-block;background:#263449;border:1px solid #40516a;border-radius:9px;padding:10px 14px;color:#fff;cursor:pointer}
+.uploadLabel:hover{background:#30415a}
+#files{position:absolute;left:-9999px}
+#fileNames{color:#9eabbc;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+#errorBox{margin-top:10px;background:#351b1f;border:1px solid #75333b;border-radius:10px;padding:12px;color:#ffd9dd}
+#errorBox code{display:block;margin-top:8px;padding:10px;background:#210f12;border-radius:7px;white-space:pre-wrap;color:#e9f1ff}
+.successBox{margin-top:10px;background:#172b22;border:1px solid #315d49;border-radius:10px;padding:10px;color:#c8f3df}
